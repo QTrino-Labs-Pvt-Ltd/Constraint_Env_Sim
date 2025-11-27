@@ -52,21 +52,6 @@ class _CRG(LiteXModule):
 
         self.idelayctrl = S7IDELAYCTRL(self.cd_idelay)
 
-
-# Periperals ---------------------------------------------------------------------------------------
-
-class TRNG(Module, AutoCSR):
-    def __init__(self):
-        self.status = CSRStatus(32)  # read register
-        self.ref = CSRStatus(1)
-
-        self.specials += Instance("TRNG",
-            i_c_100M     = ClockSignal(),
-            o_pmod_out   = self.status.status,
-            o_ref_out    = self.ref.status
-        )
-
-
 # BaseSoC ------------------------------------------------------------------------------------------
 
 class BaseSoC(SoCCore):
@@ -80,12 +65,6 @@ class BaseSoC(SoCCore):
         with_video_framebuffer = False,
         **kwargs):
         platform = digilent_nexys4ddr.Platform()
-
-        platform.add_source("./build/ew.v")
-        platform.add_source("./build/fifo_stub.v")
-        platform.add_source("./build/fifo.xdc")
-        platform.add_source("./build/fifo.dcp")
-        platform.add_source("./build/lx_cell_const_ooc.xdc")
 
         # CRG --------------------------------------------------------------------------------------
         self.crg = _CRG(platform, sys_clk_freq)
@@ -129,10 +108,6 @@ class BaseSoC(SoCCore):
                 pads         = platform.request_all("user_led"),
                 sys_clk_freq = sys_clk_freq)
             
-        # Custom Peripheral ----------------------------------------------------------------
-        self.submodules.trng = TRNG()
-        self.add_csr("trng")  # generates memory-mapped register interface
-
 # Build --------------------------------------------------------------------------------------------
 
 def main():
