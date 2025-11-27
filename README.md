@@ -1,6 +1,6 @@
 ```
 git clone https://github.com/QTrino-Labs-Pvt-Ltd/Constraint_Env_Sim.git
-cd C_Env_Sim
+cd Constraint_Env_Sim
 ```
 
 ```
